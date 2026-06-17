@@ -1,0 +1,16 @@
+name = "marketbot-engine"
+main = "src/worker.ts"
+compatibility_date = "2025-06-01"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+SEC_USER_AGENT = "marketbot@example.com"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "marketbot"
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+migrations_dir = "migrations"
+
+[observability]
+enabled = true

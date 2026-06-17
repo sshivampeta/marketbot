@@ -1,0 +1,34 @@
+{
+  "name": "@marketbot/engine",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "dev:worker": "wrangler dev",
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "deploy": "wrangler deploy",
+    "deploy:migrations": "wrangler d1 migrations apply marketbot --remote",
+    "deploy:migrations:local": "wrangler d1 migrations apply marketbot --local",
+    "lint": "echo 'no lint configured'"
+  },
+  "dependencies": {
+    "@marketbot/broker": "*",
+    "@marketbot/connectors": "*",
+    "@marketbot/risk": "*",
+    "@marketbot/signals": "*",
+    "@marketbot/tax": "*",
+    "@hono/node-server": "^1.14.0",
+    "hono": "^4.7.2"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250605.0",
+    "@types/node": "^22.13.4",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.5",
+    "wrangler": "^4.19.0"
+  }
+}

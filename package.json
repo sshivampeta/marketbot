@@ -1,0 +1,24 @@
+{
+  "name": "marketbot",
+  "private": true,
+  "version": "0.1.0",
+  "description": "AI-powered market intelligence and trade-assist platform",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w @marketbot/engine & npm run dev -w @marketbot/web",
+    "build:packages": "npm run build -w @marketbot/connectors -w @marketbot/risk -w @marketbot/tax -w @marketbot/broker && npm run build -w @marketbot/signals",
+    "build": "npm run build:packages && npm run build -w @marketbot/engine -w @marketbot/scheduler -w @marketbot/web",
+    "typecheck": "npm run build:packages && npm run typecheck --workspaces --if-present",
+    "test": "npm run build:packages && npm run test --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "deploy:engine": "npm run build:packages && npm run deploy:migrations -w @marketbot/engine && npm run deploy -w @marketbot/engine",
+    "deploy:web": "npm run build -w @marketbot/web"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "Apache-2.0"
+}

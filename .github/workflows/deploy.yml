@@ -1,0 +1,75 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run test
+      - run: npm run build:packages
+
+  deploy:
+    needs: verify
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build:packages
+
+      - name: Apply D1 migrations
+        working-directory: apps/engine
+        run: npx wrangler d1 migrations apply marketbot --remote
+
+      - name: Deploy engine worker
+        id: worker
+        working-directory: apps/engine
+        run: |
+          set -euo pipefail
+          npx wrangler deploy 2>&1 | tee ../../deploy-worker.log
+          WORKER_URL="$(grep -Eo 'https://[a-zA-Z0-9.-]+\.workers\.dev' ../../deploy-worker.log | head -1)"
+          if [ -z "$WORKER_URL" ]; then
+            echo "Could not detect worker URL from wrangler output" >&2
+            exit 1
+          fi
+          echo "url=$WORKER_URL" >> "$GITHUB_OUTPUT"
+          echo "Deployed engine to $WORKER_URL"
+
+      - name: Build web dashboard
+        env:
+          VITE_ENGINE_URL: ${{ steps.worker.outputs.url || secrets.ENGINE_URL }}
+        run: npm run build -w @marketbot/web
+
+      - name: Deploy web to Cloudflare Pages
+        run: npx wrangler pages deploy apps/web/dist --project-name=marketbot-web --commit-dirty=true
+
+      - name: Summary
+        run: |
+          echo "Engine URL: ${{ steps.worker.outputs.url }}"
+          echo "Web URL: https://marketbot-web.pages.dev (or your configured custom domain)"
