@@ -9,8 +9,8 @@ SEC_USER_AGENT = "marketbot@example.com"
 [[d1_databases]]
 binding = "DB"
 database_name = "marketbot"
-database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+database_id = "08202b8c-1822-4b49-b3a1-af16e9e9f648"
 migrations_dir = "migrations"
-
+account_id = "dcc9ca28b1a9a24a9540108c7593edae"
 [observability]
 enabled = true
