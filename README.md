@@ -115,46 +115,6 @@ packages/
   broker/         # Broker adapter + execution state
 ```
 
-Safety-First Trading Model
-Ingest event/feed data
-Build signal (where/what/how/when)
-Generate trade proposal
-Run risk + tax gates
-Prompt user for approval
-Submit only after approval
-Track order lifecycle and outcomes
-
-Local Development (example)
-Prerequisites
-Node.js LTS
-pnpm (recommended)
-Git
-
-Setup
-
-pnpm install
-cp .env.example .env
-pnpm dev
-
-Typical scripts
-pnpm lint
-pnpm test
-pnpm build
-
-Environment Variables (.env.example)
-
-# App
-NODE_ENV=development
-# Cloudflare
-CLOUDFLARE_ACCOUNT_ID=
-CLOUDFLARE_API_TOKEN=
-# Data ingestion (public/free first)
-SEC_USER_AGENT=your-email@example.com
-# Notifications (optional)
-TELEGRAM_BOT_TOKEN=
-TELEGRAM_CHAT_ID=
-
-
 SEC EDGAR filings
 Federal Reserve releases/speeches
 BLS/BEA macro data
