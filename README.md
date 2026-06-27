@@ -196,9 +196,3 @@ PRs and issues are welcome after initial scaffold stabilizes. Please keep change
 
 License
 Licensed under the Apache License, Version 2.0. See LICENSE.
-
-
-If you want, I can also give you:
-1) a matching `.env.example`,
-2) initial `package.json` scripts, and
-3) a one-file `CONTRIBUTING.md` starter.
