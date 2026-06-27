@@ -17,7 +17,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
           cache: npm
 
       - run: npm ci
@@ -37,7 +37,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
           cache: npm
 
       - run: npm ci
@@ -66,8 +66,13 @@ jobs:
           VITE_ENGINE_URL: ${{ steps.worker.outputs.url || secrets.ENGINE_URL }}
         run: npm run build -w @marketbot/web
 
+      - name: Ensure Cloudflare Pages project exists
+        run: |
+          npx wrangler pages project create marketbot-web --production-branch=main \
+            || echo "Pages project marketbot-web already exists"
+
       - name: Deploy web to Cloudflare Pages
-        run: npx wrangler pages deploy apps/web/dist --project-name=marketbot-web --commit-dirty=true
+        run: npx wrangler pages deploy apps/web/dist --project-name=marketbot-web --branch=main --commit-dirty=true
 
       - name: Summary
         run: |
